@@ -1,6 +1,5 @@
-const fs = require('node:fs');
-const path = require('node:path');
-
+const fs = require("node:fs");
+const path = require("node:path");
 
 class Templates {
   constructor(type, name, sass, atomType) {
@@ -22,7 +21,7 @@ class Templates {
       },
       react: {
         imports: {
-          regular: `import React from "react";\n`,
+          regular: "",
           sass: `import Styles from "./name.module.scss";\n`,
         },
         body: {
@@ -50,28 +49,40 @@ class Templates {
 
   renderStorybook() {
     return new Promise((resolve, reject) => {
-      fs.readFile(path.join(__dirname, '/templates/storybookFile'), 'utf8', (err, data) => {
-        if (err) {
-          reject(err);
+      fs.readFile(
+        path.join(__dirname, "/templates/storybookFile"),
+        "utf8",
+        (err, data) => {
+          if (err) {
+            reject(err);
+          }
+          if (data) {
+            resolve(
+              data
+                .replace(/name/g, this.name)
+                .replace(/AtomType/g, this.atomType)
+            );
+          }
         }
-        if (data) {
-          resolve(data.replace(/name/g, this.name).replace(/AtomType/g, this.atomType));
-        }
-      });
-    })
+      );
+    });
   }
 
-  renderJsTestFile(){
+  renderJsTestFile() {
     return new Promise((resolve, reject) => {
-      fs.readFile(path.join(__dirname, '/templates/jsTestFile'), 'utf8', (err, data) => {
-        if (err) {
-          reject(err);
+      fs.readFile(
+        path.join(__dirname, "/templates/jsTestFile"),
+        "utf8",
+        (err, data) => {
+          if (err) {
+            reject(err);
+          }
+          if (data) {
+            resolve(data.replace(/name/g, this.name));
+          }
         }
-        if (data) {
-          resolve(data.replace(/name/g, this.name));
-        }
-      });
-    })
+      );
+    });
   }
 }
 

@@ -6,10 +6,12 @@ const { hideBin } = require("yargs/helpers");
 
 const AtomicFile = require("./atomicFile");
 const AtomicFileTypes = require("./atomicFileTypes");
-const { describe } = require("node:test");
 
-const { projectType, src_folder = "./src" } = require(process.cwd() +
-  "/cafe.config.json");
+const {
+  projectType,
+  src_folder = "./src",
+  fileType = "ts",
+} = require(process.cwd() + "/cafe.config.json");
 
 const usage = "\nUsage: cafe <arguments> <atom_path>";
 const options = yargs
@@ -36,13 +38,13 @@ const options = yargs
     alias: "create_storybook",
     describe: "define if you want to include a storybook file",
     demandOption: false,
-    type: "boolean"
+    type: "boolean",
   })
   .option("t", {
     alias: "create_testfiles",
     describe: "define if you want to include a test file",
     demandOption: false,
-    type: "boolean"
+    type: "boolean",
   })
   .option("setup", {
     describe: "setup initial folder structure",
@@ -60,7 +62,8 @@ if (argv.type || argv.at) {
       src_folder,
       argv.s,
       argv.d,
-      argv.t
+      argv.t,
+      fileType
     );
     atomicFile.createAtom();
   } else {
@@ -77,10 +80,11 @@ if (argv.setup) {
     if (!Fs.existsSync(folderPath)) {
       Fs.mkdirSync(folderPath, { recursive: true });
     }
-    if (!Fs.existsSync(`${folderPath}/index.js`))
-      Fs.writeFileSync(`${folderPath}/index.js`, "", function (err) {
+    if (!Fs.existsSync(`${folderPath}/index.${fileType}`)) {
+      Fs.writeFileSync(`${folderPath}/index.${fileType}`, "", function (err) {
         if (err) throw err;
       });
+    }
   }
   console.log("Structure created");
   return;
